@@ -62,20 +62,35 @@ public class NotificationModule extends ReactContextBaseJavaModule {
             Intent startMainActivity = new Intent(context, main);
             PendingIntent myIntent = PendingIntent.getActivity(context, 0, startMainActivity, 0);
 
-            Notification.Action action = new Notification.Action.Builder(R.drawable.ic_launcher, title, myIntent).build();
+            Notification notification;
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            // Action.Builder w/ addAction(action) is not available until API v20
+            if (currentapiVersion >= android.os.Build.VERSION_CODES.KITKAT_WATCH){
+                // Use action builder to build action
+                Notification.Action action = new Notification.Action.Builder(R.drawable.ic_launcher, title, myIntent).build();
+                // Do something for lollipop and above versions
+                notification = new Notification.Builder(context)
+                    .addAction(action)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .build();
+            } else{
+                // do something for phones running an SDK before API 20
+                notification = new Notification.Builder(context)
+                    .addAction(R.drawable.ic_launcher, title, myIntent)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .build();
+            }
 
-            Notification notification = new Notification.Builder(context)
-                .addAction(action)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .build();
 
             NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(1, notification);
         } catch (Exception e) {
-            
+
         }
 
     }

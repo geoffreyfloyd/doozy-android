@@ -1,4 +1,3 @@
 rootProject.name = 'doozy'
 
 include ':app'
-//include '../../react-native/ReactAndroid'
