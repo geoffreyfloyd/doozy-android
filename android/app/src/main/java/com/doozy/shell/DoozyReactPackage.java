@@ -22,6 +22,7 @@ import com.facebook.react.modules.network.NetworkingModule;
 import com.facebook.react.modules.storage.AsyncStorageModule;
 import com.facebook.react.modules.toast.ToastModule;
 import com.doozy.notification.NotificationModule;
+import com.doozy.alarm.AlarmModule;
 import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.views.drawer.ReactDrawerLayoutManager;
 import com.facebook.react.views.image.ReactImageManager;
@@ -48,7 +49,8 @@ public class DoozyReactPackage implements ReactPackage {
       new FrescoModule(reactContext),
       new NetworkingModule(reactContext),
       new ToastModule(reactContext),
-      new NotificationModule(reactContext));
+      new NotificationModule(reactContext),
+      new AlarmModule(reactContext));
   }
 
   @Override

@@ -6,6 +6,7 @@
 
 var React = require('react-native');
 var NotificationAndroid = require('./NotificationAndroid');
+var AlarmAndroid = require('./AlarmAndroid');
 
 var {
     AppRegistry,
@@ -25,8 +26,11 @@ var doozy = React.createClass({
     },
 
     handleClick: function (text) {
-        ToastAndroid.show(doozy.title, ToastAndroid.SHORT);
-        NotificationAndroid.notify('com.doozy.MainActivity', doozy.title, doozy.description)
+
+        //NotificationAndroid.notify('com.doozy.MainActivity', doozy.title, doozy.description);
+        //NotificationAndroid.notifySchedule();
+        AlarmAndroid.setAlarm("com.doozy.DailyLogReminderReceiver", "DAILY");
+        ToastAndroid.show("You'll be notified nightly at 8PM!", ToastAndroid.SHORT);
     },
 
     render: function () {

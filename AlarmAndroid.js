@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule NotificationAndroid
+ * @providesModule AlarmAndroid
  */
 
 'use strict';
 
-var RCTNotificationAndroid = require('NativeModules').NotificationAndroid;
+var RCTAlarmAndroid = require('NativeModules').AlarmAndroid;
 
 /**
  * This exposes the native NotificationAndroid module as a JS module. This has a function 'showText'
@@ -21,20 +21,14 @@ var RCTNotificationAndroid = require('NativeModules').NotificationAndroid;
  * 2. int duration: The duration of the Notification. May be NotificationAndroid.SHORT or NotificationAndroid.LONG
  */
 
-var NotificationAndroid = {
+var AlarmAndroid = {
 
-  notify: function (
+  setAlarm: function (
     activity: string,
-    title: string,
-    message: string
+    recurrence: string
   ): void {
-    RCTNotificationAndroid.notify(activity, title, message);
-  },
-
-  notifySchedule: function (
-  ): void {
-    RCTNotificationAndroid.notifySchedule();
+    RCTAlarmAndroid.setAlarm(activity, recurrence);
   },
 };
 
-module.exports = NotificationAndroid;
+module.exports = AlarmAndroid;

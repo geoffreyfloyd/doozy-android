@@ -7,7 +7,7 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-package com.doozy.notification;
+package com.doozy.alarm;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -35,20 +35,20 @@ import com.doozy.R;
 /**
  * {@link NativeModule} that allows JS to push an Android Notification.
  */
-public class NotificationModule extends ReactContextBaseJavaModule {
+public class AlarmModule extends ReactContextBaseJavaModule {
 
     public static final int REQUEST_CODE = 0;
     //public static final int RESULT_PHOTO = 1;
     //public static final int RESULT_VID = 2;
     private static final String SOMETHING = "SHORT";
 
-    public NotificationModule(ReactApplicationContext reactContext) {
+    public AlarmModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
 
     @Override
     public String getName() {
-        return "NotificationAndroid";
+        return "AlarmAndroid";
     }
 
     @Override
@@ -59,19 +59,7 @@ public class NotificationModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void notify(String activity, String title, String message) {
-        Context context = getReactApplicationContext();
-
-        try {
-            Class activityClass = Class.forName(activity);
-            NotificationModule.SendNotification(activityClass, context, title, message);
-        } catch (Exception e) {
-
-        }
-    }
-
-    @ReactMethod
-    public void notifySchedule() {
+    public void setAlarm(String activityName, String recurrence) {
 
         Context context = getReactApplicationContext();
         Intent notifyLater = new Intent(context, DailyLogReminderReceiver.class);
@@ -79,39 +67,9 @@ public class NotificationModule extends ReactContextBaseJavaModule {
 
         // Set alarm for every day at 8PM
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, 20);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.MINUTE, 3);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, myIntent);  //set repeating every 24 hours
-    }
-
-    public static void SendNotification(Class activityClass, Context context, String title, String message) {
-        Intent startMainActivity = new Intent(context, activityClass);
-        PendingIntent myIntent = PendingIntent.getActivity(context, 0, startMainActivity, 0);
-
-        int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-
-        Notification.Builder builder = new Notification.Builder(context)
-            .setContentTitle(title)
-            .setContentText(message)
-            .setSmallIcon(R.drawable.ic_launcher)
-            .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 })
-            .setLights(android.graphics.Color.RED, 3000, 3000);
-
-        // Action.Builder w/ addAction(action) is not available until API v20
-        if (currentApiVersion >= android.os.Build.VERSION_CODES.KITKAT_WATCH){
-            // Use action builder to build action
-            Notification.Action action = new Notification.Action.Builder(R.drawable.ic_launcher, title, myIntent).build();
-            builder.addAction(action);
-        } else{
-            // do something for phones running an SDK before API 20
-            builder.addAction(R.drawable.ic_launcher, title, myIntent);
-        }
-
-        Notification notification = builder.build();
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(1, notification);
     }
 }
